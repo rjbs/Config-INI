@@ -14,6 +14,10 @@ version 0.002
 
  $Id$
 
+=cut
+
+our $VERSION = '0.002';
+
 =head1 SYNOPSIS
 
 If F<family.ini> contains:
@@ -74,8 +78,6 @@ All throw an exception when they encounter an error.
 use Carp ();
 use IO::File;
 use IO::String;
-
-our $VERSION = '2.110';
 
 =head1 METHODS
 
