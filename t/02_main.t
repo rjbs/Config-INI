@@ -3,14 +3,14 @@
 use strict;
 use warnings;
 
-use Test::More tests => 33;
+use Test::More tests => 6;
 
 # Check their perl version
 use_ok('Config::INI::Reader');
 
 # Try to read in a config
-my $hashref = Config::INI::Reader->read( 'test.conf' );
-isa_ok($hashref, 'HASH', "return of Config::INI::Reader->read");
+my $hashref = Config::INI::Reader->read_file( 'test.conf' );
+isa_ok($hashref, 'HASH', "return of Config::INI::Reader->read_file");
 
 # Check the structure of the config
 my $expected = {
@@ -56,7 +56,7 @@ END
 
 { # Test read_string
   my $hashref = Config::INI::Reader->read_string( $string );
-  isa_ok($hashref, 'HASH', "return of Config::INI::Reader->read");
+  isa_ok($hashref, 'HASH', "return of Config::INI::Reader->read_string");
 
   is_deeply( $hashref, $Trivial, '->read_string returns expected value' );
 }
