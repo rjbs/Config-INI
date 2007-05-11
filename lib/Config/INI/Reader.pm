@@ -259,6 +259,8 @@ sub set_value {
 
 Ricardo SIGNES, C<< E<lt>rjbs@cpan.orgE<gt> >>
 
+Based on L<Config::Tiny>, by Adam Kennedy.
+
 =head1 BUGS
 
 Bugs should be reported via the CPAN bug tracker at
