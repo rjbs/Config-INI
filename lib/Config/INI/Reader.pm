@@ -10,13 +10,13 @@ Config::INI::Reader - a subclassable .ini-file parser
 
 =head1 VERSION
 
-version 0.002
+version 0.003
 
  $Id$
 
 =cut
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 
 =head1 SYNOPSIS
 
@@ -81,19 +81,6 @@ use IO::String;
 
 =head1 METHODS
 
-=cut
-
-sub _new {
-  my ($class) = @_;
-
-  my $self = {
-    data    => {},
-    section => '_',
-  };
-
-  bless $self => $class;
-}
-
 =head2 read_file
 
   my $hash_ref = Config::INI::Reader->read($filename);
@@ -148,7 +135,7 @@ handle.
 sub read_handle {
   my ($invocant, $handle) = @_;
 
-  my $self = ref $invocant ? $invocant : $invocant->_new;
+  my $self = ref $invocant ? $invocant : $invocant->new;
 
 	# parse the file
   LINE: while (local $_ = $handle->getline) {
@@ -211,6 +198,37 @@ sub set_value {
   my ($self, $name, $value) = @_;
 
   $self->{data}{ $self->{section} }{ $name } = $value;
+}
+
+=head2 starting_section
+
+  my $section = Config::INI::Reader->starting_section;
+
+This method returns the name of the starting section.  The default is: C<_>
+
+=cut
+
+sub starting_section { '_' }
+
+=head2 new
+
+  my $reader = Config::INI::Reader->new;
+
+This method returns a new reader.  This generally does not need to be called by
+anything but the various C<read_*> methods, which create a reader object only
+ephemerally.
+
+=cut
+
+sub new {
+  my ($class) = @_;
+
+  my $self = {
+    data    => {},
+    section => $class->starting_section,
+  };
+
+  bless $self => $class;
 }
 
 # # Save an object to a file
