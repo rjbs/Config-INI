@@ -1,9 +1,10 @@
 use strict;
 use inc::Module::Install;
 
-name           'Config-Tiny';
-all_from       'lib/Config/Tiny.pm';
-build_requires 'ExtUtils::MakeMaker' => '6.11';
-build_requires 'Test::More'          => '0.47';
+name           ('Config-INI-Reader');
+all_from       ('lib/Config/INI/Reader.pm');
+requires       ('Carp'       => 0.000); # sure, it's core, but let's be thorough
+requires       ('IO::File'   => 0.000); # minimum version unknown
+requires       ('IO::String' => 0.000); # minimum version unknown
 
 WriteAll;
