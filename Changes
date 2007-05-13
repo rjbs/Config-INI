@@ -1,0 +1,7 @@
+Changelog for Config-INI-Reader
+
+0.004     2007-05-12
+          fix asinine error in test, poorly adapted from Config::Tiny
+
+0.003     2007-05-10
+          first release
