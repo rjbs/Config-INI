@@ -164,7 +164,22 @@ sub read_handle {
 		Carp::croak "Syntax error at line $lineno: '$_'";
 	}
 
+  $self->finalize;
+
 	return $self->{data};
+}
+
+=head2 current_section
+
+  my $section_name = $reader->current_section;
+
+This method returns the name of the current section.  If no section has yet
+been set, it returns the result of calling the C<starting_section> method.
+
+=cut
+
+sub current_section {
+  defined $_[0]->{section} ? $_[0]->{section} : $_[0]->starting_section
 }
 
 =head2 change_section
@@ -197,7 +212,7 @@ behavior is to change the value of the named property to the given value.
 sub set_value {
   my ($self, $name, $value) = @_;
 
-  $self->{data}{ $self->{section} }{ $name } = $value;
+  $self->{data}{ $self->current_section }{ $name } = $value;
 }
 
 =head2 starting_section
@@ -209,6 +224,17 @@ This method returns the name of the starting section.  The default is: C<_>
 =cut
 
 sub starting_section { '_' }
+
+=head2 finalize
+
+  $reader->finalize;
+
+This method is called when the reader has finished reading in every line of the
+file.
+
+=cut
+
+sub finalize { }
 
 =head2 new
 
@@ -225,7 +251,6 @@ sub new {
 
   my $self = {
     data    => {},
-    section => $class->starting_section,
   };
 
   bless $self => $class;
