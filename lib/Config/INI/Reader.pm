@@ -139,11 +139,9 @@ sub read_handle {
 
     # parse the file
     LINE: while (local $_ = $handle->getline) {
-        # Skip comments and empty lines
-        next LINE if /\A\s*(?:\#|\;|$)/;
+        next LINE if $self->ignore_line($_);
 
-        # Remove inline comments
-        s/\s+#\s.+$//g;
+        $self->preprocess_line(\$_);
 
         # Handle section headers
         if ( /^\s*\[\s*(.+?)\s*\]\s*$/ ) {
@@ -224,6 +222,38 @@ This method returns the name of the starting section.  The default is: C<_>
 =cut
 
 sub starting_section { '_' }
+
+=head2 ignore_line
+
+  my $do_ignore = Config::INI::Reader->ignore_line($line);
+
+This decides whether a line should be skipped by returning a value that's
+evaluated in boolean context. Defaults to skipping empty lines and comments.
+
+=cut
+
+sub ignore_line {
+    my ($self, $line) = @_;
+
+    # Skip comments and empty lines
+    return $line =~ /\A\s*(?:\#|\;|$)/ ? 1 : 0;
+}
+
+=head2 preprocess_line
+
+  Config::Ini->preprocess_line(\$line);
+
+Preprocesses a single input line before it's getting parsed. Defaults to
+stripping inline comments.
+
+=cut
+
+sub preprocess_line {
+    my ($self, $line) = @_;
+
+    # Remove inline comments
+    ${ $line } =~ s/\s+#\s.+$//g;
+}
 
 =head2 finalize
 
