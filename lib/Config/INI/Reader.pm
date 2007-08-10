@@ -33,7 +33,7 @@ If F<family.ini> contains:
   height = 23"
 
 Then when your program contains:
-  
+
   my $hash = Config::INI::Reader->read_file('family.ini');
 
 C<$hash> will contain:
@@ -262,7 +262,7 @@ sub new {
 #     my $file = shift or return $self->_error(
 #         'No file name provided'
 #         );
-# 
+#
 #     # Write it to the file
 #     open( CFG, '>' . $file ) or return $self->_error(
 #         "Failed to open file '$file' for writing: $!"
@@ -270,11 +270,11 @@ sub new {
 #     print CFG $self->write_string;
 #     close CFG;
 # }
-# 
+#
 # # Save an object to a string
 # sub write_string {
 #     my $self = shift;
-# 
+#
 #     my $contents = '';
 #     foreach my $section ( sort { (($b eq '_') <=> ($a eq '_')) || ($a cmp $b) } keys %$self ) {
 #         my $block = $self->{$section};
@@ -284,10 +284,10 @@ sub new {
 #             $contents .= $self->property_string($section, $property);
 #         }
 #     }
-#     
+#
 #     $contents;
 # }
-# 
+#
 # sub property_string { "$_[2]=$_[0]->{$_[1]}->{$_[2]}\n" };
 
 =head1 TODO
