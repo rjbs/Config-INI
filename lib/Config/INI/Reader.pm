@@ -195,7 +195,10 @@ sub change_section {
     my ($self, $section) = @_;
 
     $self->{section} = $section;
-    $self->{data}{$section} ||= {};
+
+    if (!exists $self->{data}{$section}) {
+        $self->{data}{$section} = {};
+    }
 }
 
 =head2 set_value

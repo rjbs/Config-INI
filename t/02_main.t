@@ -3,7 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use IO::File;
+use IO::String;
+use Test::More tests => 7;
 
 # Check their perl version
 use_ok('Config::INI::Reader');
@@ -22,6 +24,7 @@ my $expected = {
 		Foo => 'Bar',
 		this => 'Your Mother!',
 		blank => '',
+        moo => 'kooh',
 		},
 	'Section Two' => {
 		'something else' => 'blah',
@@ -59,6 +62,17 @@ END
   isa_ok($hashref, 'HASH', "return of Config::INI::Reader->read_string");
 
   is_deeply( $hashref, $Trivial, '->read_string returns expected value' );
+}
+
+{ # Test read_handle
+    my $fh = IO::File->new('test.conf', 'r');
+    my $data = do { local $/ = undef; <$fh> };
+
+    is_deeply(
+            Config::INI::Reader->new->read_handle( IO::String->new($data) ),
+            $expected,
+            '->read_handle returns expected value'
+    );
 }
 
 #####################################################################
