@@ -236,7 +236,7 @@ sub ignore_line {
     my ($self, $line) = @_;
 
     # Skip comments and empty lines
-    return $line =~ /\A\s*(?:\#|\;|$)/ ? 1 : 0;
+    return $line =~ /\A\s*(?:#|$)/ ? 1 : 0;
 }
 
 =head2 preprocess_line
