@@ -7,104 +7,148 @@ package Config::INI::Writer;
 use IO::File;
 
 sub new {
-    my ($class) = @_;
+  my ($class) = @_;
 
-    my $self = bless {}, $class;
+  my $self = bless { did_section => {} } => $class;
 
-    return $self;
+  return $self;
 }
 
 sub write_file {
-    my ($invocant, $data, $filename) = @_;
+  my ($invocant, $data, $filename) = @_;
 }
 
 sub write_string {
-    my ($invocant, $data) = @_;
+  my ($invocant, $data) = @_;
 
-    my $output = '';
+  my $output = '';
 
-    my $self = ref $invocant ? $invocant : $invocant->new;
-    my $root_section_name = $self->default_section;
+  my $self = ref $invocant ? $invocant : $invocant->new;
 
-    my @section_names = grep { $_ ne $root_section_name } keys %{ $data };
-    if (my $meth = $self->can('sort_sections')) {
-        @section_names = sort { $self->$meth($a, $b) } @section_names;
-    }
+  $data = $self->preprocess_data($data);
 
-    if (exists $data->{$root_section_name}) {
-        $output .= $self->stringify_props( $data->{$root_section_name} );
-    }
+  my $starting_section_name = $self->starting_section;
 
-    SECTION: for my $section_name (@section_names) {
-        my $section_data = $data->{$section_name};
+  SECTION: for (my $i = 0; $i < $#$data; $i += 2) {
+    my ($section_name, $section_data) = @$data[ $i, $i + 1 ];
 
-        next SECTION if $self->skip_section($section_name, $section_data);
+    $self->change_section($section_name);
+    $output .= $self->stringify_section($section_data);
+    $self->finish_section($section_name);
+  }
 
-        $output .= $self->stringify_section($section_name, $section_data);
-    }
-
-    return $output;
+  return $output;
 }
 
 sub write_handle {
-    my ($invocant, $data, $handle) = @_;
+  my ($invocant, $data, $handle) = @_;
+}
+
+sub preprocess_data {
+  my ($self, $data) = @_;
+
+  return $data if ref $data eq 'ARRAY';
+
+  my @new_data;
+
+  my $starting_section_name = $self->starting_section;
+
+  for (
+    $starting_section_name,
+    grep { $_ ne $starting_section_name } keys %$data
+  ) {
+    push @new_data,
+      ($_ => (ref $data->{$_} eq 'HASH') ? [ %{ $data->{$_} } ] : $data->{$_});
+  }
+
+  return \@new_data;
+}
+
+sub change_section {
+  my ($self, $section_name) = @_;
+
+  $self->{current_section} = $section_name;
+}
+
+sub finish_section {
+  my ($self, $section_name) = @_;
+  return $self->{did_section}{ $section_name }++;
+}
+
+sub did_section {
+  my ($self, $section_name) = @_;
+  return $self->{did_section}{ $section_name };
+}
+
+sub done_sections {
+  my ($self) = @_;
+  return keys %{ $self->{did_section} };
+}
+
+sub current_section {
+  my ($self) = @_;
+  return $self->{current_section};
 }
 
 sub stringify_section {
-    my ($self, $section_name, $section_data) = @_;
+  my ($self, $section_data) = @_;
 
-    my $output = $self->stringify_section_name($section_name) . "\n";
-    $output .= $self->stringify_props($section_data);
+  my $output = '';
 
-    return $output;
+  my $current_section_name  = $self->current_section;
+  my $starting_section_name = $self->starting_section;
+
+  unless (
+    $starting_section_name
+    and $starting_section_name eq $current_section_name
+    and ! $self->done_sections
+    and ! $self->explicit_starting_header
+  ) {
+    $output .= $self->stringify_section_header($self->current_section);
+  }
+
+  $output .= $self->stringify_section_data($section_data);
+
+  return $output;
 }
 
-sub stringify_props {
-    my ($self, $props) = @_;
+sub stringify_section_data {
+  my ($self, $values) = @_;
 
-    my $prop_string = '';
+  my $output = '';
 
-    my @prop_names = keys %{ $props };
-    if (my $meth = $self->can('sort_props')) {
-        @prop_names = sort { $self->$meth($a, $b) } @prop_names;
-    }
+  for (my $i = 0; $i < $#$values; $i += 2) {
+    $output .= $self->stringify_value_assignment(@$values[ $i, $i + 1]);
+  }
 
-    PROP: for my $prop_name (@prop_names) {
-        my $prop_value = $props->{$prop_name};
-
-        next PROP if $self->skip_prop($prop_name, $prop_value);
-
-        $prop_string .= $self->stringify_prop($prop_name, $prop_value);
-        $prop_string .= "\n";
-    }
-
-    return $prop_string;
+  return $output;
 }
 
-sub stringify_prop {
-    my ($self, $prop_name, $prop_value) = @_;
+sub stringify_value_assignment {
+  my ($self, $name, $value) = @_;
 
-    return $prop_name . '=' . $prop_value;
+  return '' unless defined $value;
+  return $name . ' = ' . $self->stringify_value($value) . "\n";
 }
 
-sub skip_section {
-    my ($self, $section_name, $section_data) = @_;
+sub stringify_value {
+  my ($self, $value) = @_;
 
-    return 0;
+  return defined $value ? $value : '';
 }
 
-sub stringify_section_name {
-    my ($self, $section_name) = @_;
+sub stringify_section_header {
+  my ($self, $section_name) = @_;
 
-    return "[${section_name}]";
+  my $output  = '';
+     $output .= "\n" if $self->done_sections;
+     $output .= "[$section_name]\n";
+
+  return $output;
 }
 
-sub skip_prop {
-    my ($self, $prop_name, $prop_value) = @_;
+sub starting_section { return '_' }
 
-    return 0;
-}
-
-sub default_section { return '_' }
+sub explicit_starting_header { 0 }
 
 1;
