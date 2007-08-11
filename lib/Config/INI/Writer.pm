@@ -5,6 +5,7 @@ use warnings;
 package Config::INI::Writer;
 
 use IO::File;
+use IO::String;
 
 sub new {
   my ($class) = @_;
