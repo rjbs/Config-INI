@@ -1,0 +1,5 @@
+^\.git/
+blib\b
+^Makefile$
+^Makefile.old$
+\.bak$
