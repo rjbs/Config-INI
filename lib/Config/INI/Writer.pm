@@ -89,7 +89,7 @@ use IO::String;
 
 =head2 write_file
 
-  Config::INI::Writer->write_file($data, $filename);
+  Config::INI::Writer->write_file($input, $filename);
 
 This method writes out the configuration represented by C<$data> to the file
 named by C<$filename>.  If a file by that name exists, it is overwritten.
@@ -110,12 +110,12 @@ sub write_file {
   my $handle = IO::File->new($filename, '>')
     or Carp::croak "couldn't read file '$filename': $!";
 
-  $invocant->read_handle($handle);
+  $invocant->write_handle($data, $handle);
 }
 
 =head2 write_string
 
-  my $string = Config::INI::Writer->write_string($data);
+  my $string = Config::INI::Writer->write_string($input);
 
 This method returns a string containing the INI content describing the given
 data.

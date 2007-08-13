@@ -2,7 +2,7 @@
 
 use strict;
 
-use Test::More tests => 6;
+use Test::More tests => 7;
 
 my $R = 'Config::INI::Reader';
 my $W = 'Config::INI::Writer';
@@ -89,3 +89,15 @@ END_INI
 eval { $W->write_string([ A => [ B => 1 ], A => [ B => 2 ] ]); };
 like($@, qr/multiple/, "you can't set property B in section A more than once");
 
+SKIP: {
+  eval "require File::Temp;" or skip "File::Temp not availabe", 1;
+
+  my ($fh, $tmpfile) = File::Temp::tempfile(UNLINK => 1);
+  close $fh;
+
+  $W->write_file($data, $tmpfile);
+
+  my $read_in = $R->read_file($tmpfile);
+
+  is_deeply($read_in, $data, "round-trip data->file->data");
+}
