@@ -108,7 +108,7 @@ sub write_file {
 
   # Write out the file
   my $handle = IO::File->new($filename, '>')
-    or Carp::croak "couldn't read file '$filename': $!";
+    or Carp::croak "couldn't write to file '$filename': $!";
 
   $invocant->write_handle($data, $handle);
 }

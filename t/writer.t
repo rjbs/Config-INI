@@ -2,7 +2,7 @@
 
 use strict;
 
-use Test::More tests => 7;
+use Test::More tests => 13;
 
 my $R = 'Config::INI::Reader';
 my $W = 'Config::INI::Writer';
@@ -86,18 +86,66 @@ END_INI
   is($W->write_string($starting_later), $expected, "stringifying AOA, _ later");
 }
 
+{
+  my @possibilities = (
+    [ a => [ b => 1 ] ],
+    [ a => { b => 1 } ],
+    { a => { b => 1 } },
+    { a => [ b => 1 ] },
+  );
+
+  my $reference = $W->write_string(shift @possibilities);
+  my $failures  = 0;
+  $failures++ unless $W->write_string(shift @possibilities) eq $reference;
+
+  ok(!$failures, "all array/hash combinations seem miscible");
+}
+
 eval { $W->write_string([ A => [ B => 1 ], A => [ B => 2 ] ]); };
 like($@, qr/multiple/, "you can't set property B in section A more than once");
 
 SKIP: {
-  eval "require File::Temp;" or skip "File::Temp not availabe", 1;
+  eval "require File::Temp;" or skip "File::Temp not availabe", 2;
 
-  my ($fh, $tmpfile) = File::Temp::tempfile(UNLINK => 1);
+  my ($fh, $fn) = File::Temp::tempfile(UNLINK => 1);
   close $fh;
+  unlink $fn;
 
-  $W->write_file($data, $tmpfile);
+  $W->write_file($data, $fn);
 
-  my $read_in = $R->read_file($tmpfile);
+  is_deeply(
+    $R->read_file($fn),
+    $data,
+    "round-trip data->file->data",
+  );
 
-  is_deeply($read_in, $data, "round-trip data->file->data");
+  my $new_data = { foo => { a => 1, b => 69101 } };
+  $W->write_file($new_data, $fn);
+
+  is_deeply(
+    $R->read_file($fn),
+    $new_data,
+    "round-trip data->file->data, clobbering file",
+  );
+
+  chmod 0444, $fn;
+  
+  if (-w $fn) {
+    chmod 0666, $fh;
+    skip "chmoding file 0444 left it -w", 1;
+  }
+
+  eval { Config::INI::Writer->write_file($data, $fn); };
+  like($@, qr/couldn't write/, "can't clobber an unwriteable file");
+
+  chmod 0666, $fh;
 }
+
+eval { $W->write_file($data); };
+like($@, qr/no filename/, "you can't set write to a file without a filename");
+
+eval { $W->write_file($data, 't'); };
+like($@, qr/not a plain file/, "you can't write to a file that's -e -d");
+
+eval { $W->write_string(sub { 1 }) };
+like($@, qr/can't output CODE/, "you can't write out non-ARRAY/HASH data");
