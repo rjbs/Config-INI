@@ -59,18 +59,6 @@ The chief difference is that Config::INI::Reader is designed to be subclassed
 to allow for side-effects and self-reconfiguration to occur during the course
 of reading its input.
 
-=head1 SUBCLASSING
-
-There are three reader methods, C<read_string>, C<read_file>, and
-C<read_handle>.  The first two are implemented in terms of the third.  It
-iterates over lines in a file, calling methods on the reader when events occur.
-Those events are either C<change_section>, which occurs when a C<[section]>
-line is read; or C<set_value>, which occurs when a value assignment is read.
-
-All of the reader methods return an unblessed reference to a hash.
-
-All throw an exception when they encounter an error.
-
 =cut
 
 use Carp ();
@@ -80,7 +68,15 @@ use IO::String;
 =head1 METHODS FOR READING CONFIG
 
 These methods are all that most users will need: they read configuration from a
-source of input, then they return the data extracted from that input.
+source of input, then they return the data extracted from that input.  There
+are three reader methods, C<read_string>, C<read_file>, and C<read_handle>.
+The first two are implemented in terms of the third.  It iterates over lines in
+a file, calling methods on the reader when events occur.  Those events are
+detailed below in the L</METHODS FOR SUBCLASSING> section.
+
+All of the reader methods return an unblessed reference to a hash.
+
+All throw an exception when they encounter an error.
 
 =head2 read_file
 
@@ -329,8 +325,6 @@ sub new {
 =over
 
 =item * more tests
-
-=item * Config::INI::Writer, I guess
 
 =back
 
