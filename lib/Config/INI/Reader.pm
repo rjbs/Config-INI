@@ -77,7 +77,10 @@ use Carp ();
 use IO::File;
 use IO::String;
 
-=head1 METHODS
+=head1 METHODS FOR READING CONFIG
+
+These methods are all that most users will need: they read configuration from a
+source of input, then they return the data extracted from that input.
 
 =head2 read_file
 
@@ -163,6 +166,11 @@ sub read_handle {
 
   return $self->{data};
 }
+
+=head1 METHODS FOR SUBCLASSING
+
+These are the methods you need to understand and possibly change when
+subclassing Config::INI::Reader to handle a different format of input.
 
 =head2 current_section
 
@@ -272,10 +280,11 @@ sub can_ignore {
 
 =head2 preprocess_line
 
-  Config::Ini->preprocess_line(\$line);
+  $reader->preprocess_line(\$line);
 
-Preprocesses a single input line before it's getting parsed. Defaults to
-stripping inline comments.
+This method is called to preprocess each line after it's read but before it's
+parsed.  The default implementation just strips inline comments.  Alterations
+to the line are made in place.
 
 =cut
 
@@ -325,12 +334,6 @@ sub new {
 
 =back
 
-=head1 AUTHOR
-
-Ricardo SIGNES, C<< E<lt>rjbs@cpan.orgE<gt> >>
-
-Based on L<Config::Tiny>, by Adam Kennedy.
-
 =head1 BUGS
 
 Bugs should be reported via the CPAN bug tracker at
@@ -338,6 +341,17 @@ Bugs should be reported via the CPAN bug tracker at
 L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Config-INI-Reader>
 
 For other issues, or commercial enhancement or support, contact the author.
+
+=head1 THANKS
+
+Thanks to Florian Ragwitz for improving the subclassability of this module, and
+for helping me do some of my first merging with git(7).
+
+=head1 AUTHOR
+
+Ricardo SIGNES, C<< E<lt>rjbs@cpan.orgE<gt> >>
+
+Originaly derived from L<Config::Tiny>, by Adam Kennedy.
 
 =head1 COPYRIGHT
 
