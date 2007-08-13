@@ -200,18 +200,25 @@ starting section will appear first.
 sub preprocess_data {
   my ($self, $data) = @_;
 
-  return $data if ref $data eq 'ARRAY';
-
   my @new_data;
 
-  my $starting_section_name = $self->starting_section;
+  if (ref $data eq 'HASH') {
+    my $starting_section_name = $self->starting_section;
 
-  for (
-    $starting_section_name,
-    grep { $_ ne $starting_section_name } keys %$data
-  ) {
-    push @new_data,
-      ($_ => (ref $data->{$_} eq 'HASH') ? [ %{ $data->{$_} } ] : $data->{$_});
+    for my $name (
+      $starting_section_name,
+      grep { $_ ne $starting_section_name } keys %$data
+    ) {
+      my $props = $data->{ $name };
+      push @new_data, $name => (ref $props eq 'HASH') ? [ %$props ] : $props;
+    }
+  } elsif (ref $data eq 'ARRAY') {
+    for (my $i = 0; $i < $#$data; $i += 2) {
+      my ($name, $props) = @$data[ $i, $i + 1 ];
+      push @new_data, $name, (ref $props eq 'HASH') ? [ %$props ] : $props;
+    }
+  } else {
+    Carp::croak "can't output $data via Config::INI::Writer";
   }
 
   return \@new_data;
