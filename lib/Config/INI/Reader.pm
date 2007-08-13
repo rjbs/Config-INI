@@ -1,6 +1,5 @@
 
 use strict;
-use warnings;
 
 package Config::INI::Reader;
 

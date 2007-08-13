@@ -1,6 +1,5 @@
 
 use strict;
-use warnings;
 
 package Config::INI::Writer;
 
@@ -136,7 +135,7 @@ sub write_string {
 
 =head2 write_handle
 
-  Config::INI::Writer->write_handle($data, $handle);
+  Config::INI::Writer->write_handle($input, $handle);
 
 This method writes the data in C<$data> to the IO::Handle-like object in
 C<$handle>.  This method should either succeed or throw an exception.
@@ -144,16 +143,18 @@ C<$handle>.  This method should either succeed or throw an exception.
 =cut
 
 sub write_handle {
-  my ($invocant, $data, $handle) = @_;
+  my ($invocant, $input, $handle) = @_;
 
   my $self = ref $invocant ? $invocant : $invocant->new;
 
-  $data = $self->preprocess_data($data);
+  $input = $self->preprocess_input($input);
+
+  $self->validate_input($input);
 
   my $starting_section_name = $self->starting_section;
 
-  SECTION: for (my $i = 0; $i < $#$data; $i += 2) {
-    my ($section_name, $section_data) = @$data[ $i, $i + 1 ];
+  SECTION: for (my $i = 0; $i < $#$input; $i += 2) {
+    my ($section_name, $section_data) = @$input[ $i, $i + 1 ];
 
     $self->change_section($section_name);
     $handle->print($self->stringify_section($section_data))
@@ -167,9 +168,9 @@ sub write_handle {
 These are the methods you need to understand and possibly change when
 subclassing Config::INI::Reader to handle a different format of input.
 
-=head2 preprocess_data
+=head2 preprocess_input
 
-  my $processed_data = $writer->preprocess_data($input_data);
+  my $processed_input = $writer->preprocess_input($input_data);
 
 This method is called to ensure that the data given to the C<write_*> methods
 are in a canonical form for processing and emitting.  The default
@@ -197,7 +198,7 @@ starting section will appear first.
 
 =cut
 
-sub preprocess_data {
+sub preprocess_input {
   my ($self, $data) = @_;
 
   my @new_data;
@@ -222,6 +223,37 @@ sub preprocess_data {
   }
 
   return \@new_data;
+}
+
+=head2 validate_input
+
+  $writer->validate_input($input);
+
+This method is called on the input data once they've been preprocessed by
+C<L</preprocess_input>>.
+
+It ensures that the processed input is structurally sound before beginning to
+output it.  For example, it ensures that no property is ever assigned more than
+once in a given section.
+
+This method either raises an exception or it doesn't.
+
+=cut
+
+sub validate_input {
+  my ($self, $input) = @_;
+
+  my %seen;
+  for (my $i = 0; $i < $#$input; $i += 2) {
+    my ($name, $props) = @$input[ $i, $i + 1 ];
+    $seen{ $name } ||= {};
+
+    for (my $j = 0; $j < $#$props; $j += 2) {
+      if ( $seen{ $name }{ $props->[ $j ] }++ ) {
+        Carp::croak "multiple assignments found for $name.$props->[$j]";
+      }
+    }
+  }
 }
 
 =head2 change_section

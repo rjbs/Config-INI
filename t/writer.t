@@ -1,9 +1,8 @@
-#!perl
+#!perl -w
 
 use strict;
-use warnings;
 
-use Test::More 'no_plan';
+use Test::More tests => 6;
 
 my $R = 'Config::INI::Reader';
 my $W = 'Config::INI::Writer';
@@ -27,7 +26,6 @@ is_deeply(
   $data,
   "we can round-trip hashy data",
 );
-
 
 my $starting_first = [
   _ => [
@@ -87,3 +85,7 @@ END_INI
 
   is($W->write_string($starting_later), $expected, "stringifying AOA, _ later");
 }
+
+eval { $W->write_string([ A => [ B => 1 ], A => [ B => 2 ] ]); };
+like($@, qr/multiple/, "you can't set property B in section A more than once");
+
