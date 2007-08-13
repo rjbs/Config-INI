@@ -12,8 +12,6 @@ Config::INI::Reader - a subclassable .ini-file parser
 
 version 0.004
 
- $Id$
-
 =cut
 
 our $VERSION = '0.004';
@@ -316,40 +314,6 @@ sub new {
 
   bless $self => $class;
 }
-
-# # Save an object to a file
-# sub write {
-#     my $self = shift;
-#     my $file = shift or return $self->_error(
-#         'No file name provided'
-#         );
-#
-#     # Write it to the file
-#     open( CFG, '>' . $file ) or return $self->_error(
-#         "Failed to open file '$file' for writing: $!"
-#         );
-#     print CFG $self->write_string;
-#     close CFG;
-# }
-#
-# # Save an object to a string
-# sub write_string {
-#     my $self = shift;
-#
-#     my $contents = '';
-#     foreach my $section ( sort { (($b eq '_') <=> ($a eq '_')) || ($a cmp $b) } keys %$self ) {
-#         my $block = $self->{$section};
-#         $contents .= "\n" if length $contents;
-#         $contents .= "[$section]\n" unless $section eq '_';
-#         foreach my $property ( sort keys %$block ) {
-#             $contents .= $self->property_string($section, $property);
-#         }
-#     }
-#
-#     $contents;
-# }
-#
-# sub property_string { "$_[2]=$_[0]->{$_[1]}->{$_[2]}\n" };
 
 =head1 TODO
 
