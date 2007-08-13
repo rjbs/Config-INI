@@ -5,13 +5,17 @@ use warnings;
 
 use Config::INI::Reader;
 
-use Test::More tests => 5;
+use Test::More tests => 6;
 
 eval { Config::INI::Reader->read_file; };
 like($@, qr/no filename specified/i, 'read_file without args');
 
 {
-  my $filename = q{something that's very unlikely to exist};
+  my $filename = q{t/does/not/exist};
+
+  Carp::croak "unexpected file found in test directory t"
+    if -e 't/does/not/exist';
+
   eval { Config::INI::Reader->read_file($filename); };
   like(
     $@,
@@ -25,6 +29,25 @@ like($@, qr/no filename specified/i, 'read_file without args');
 
   eval { Config::INI::Reader->read_file($filename); };
   like($@, qr/'$filename' is not a plain file/i, 'read_file on non-plain-file');
+}
+
+SKIP: {
+  eval "require File::Temp;" or skip "File::Temp not available", 1;
+
+  my ($fh, $fn) = File::Temp::tempfile(UNLINK => 1);
+  close $fh;
+
+  chmod 0222, $fn;
+  
+  if (-r $fn) {
+    chmod 0666, $fh;
+    skip "chmoding file 0222 left it -r", 1;
+  }
+
+  eval { Config::INI::Reader->read_file($fn); };
+  like($@, qr/couldn't read/, "can't read an unreadable file");
+
+  chmod 0666, $fh;
 }
 
 eval { Config::INI::Reader->read_string; };
