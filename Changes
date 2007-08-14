@@ -1,6 +1,6 @@
 Changelog for Config-INI-Reader
 
-0.005     2007-07-??
+0.005     2007-08-13
           add finalize method, lazy-load starting section method (this means
           that you can have starting_section die to prevent properties outside
           of explicity setting)
