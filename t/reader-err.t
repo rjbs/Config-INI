@@ -27,7 +27,7 @@ like($@, qr/no filename specified/i, 'read_file without args');
   my $filename = 'lib';
 
   eval { Config::INI::Reader->read_file($filename); };
-  like($@, qr/'$filename' is not a plain file/i, 'read_file on non-plain-file');
+  like($@, qr/not a plain file/i, 'read_file on non-plain-file');
 }
 
 SKIP: {

@@ -2,7 +2,7 @@
 
 use strict;
 
-use Test::More tests => 13;
+use Test::More tests => 16;
 
 my $R = 'Config::INI::Reader';
 my $W = 'Config::INI::Writer';
@@ -24,7 +24,13 @@ my $data = {
 is_deeply(
   $R->read_string($W->write_string($data)),
   $data,
-  "we can round-trip hashy data",
+  'we can round-trip hashy data',
+);
+
+is_deeply(
+  $R->read_string($W->new->write_string($data)),
+  $data,
+  'we can round-trip hashy data, object method',
 );
 
 my $starting_first = [
@@ -50,7 +56,17 @@ bar = baz
 baz = bar
 END_INI
 
-is($W->write_string($starting_first), $expected, "stringifying AOA, _ first");
+is(
+  $W->write_string($starting_first),
+  $expected,
+  'stringifying AOA, _ first',
+);
+
+is(
+  $W->new->write_string($starting_first),
+  $expected,
+  'stringifying AOA, _ first, object method',
+);
 
 {
   my $expected = <<'END_INI';
@@ -83,7 +99,17 @@ END_INI
     ],
   ];
 
-  is($W->write_string($starting_later), $expected, "stringifying AOA, _ later");
+  is(
+    $W->write_string($starting_later),
+    $expected,
+    'stringifying AOA, _ later',
+  );
+
+  is(
+    $W->new->write_string($starting_later),
+    $expected,
+    'stringifying AOA, _ later, object method',
+  );
 }
 
 {
