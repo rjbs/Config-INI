@@ -13,7 +13,7 @@ version 0.005
 
 =cut
 
-our $VERSION = '0.005';
+$Config::INI::Writer::VERSION = '0.005';
 
 =head1 SYNOPSIS
 

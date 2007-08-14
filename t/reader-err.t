@@ -1,7 +1,6 @@
-#!perl
+#!perl -tw
 
 use strict;
-use warnings;
 
 use Config::INI::Reader;
 

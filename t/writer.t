@@ -1,4 +1,4 @@
-#!perl -w
+#!perl -tw
 
 use strict;
 

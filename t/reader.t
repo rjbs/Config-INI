@@ -1,7 +1,6 @@
-#!/usr/bin/perl
+#!perl -tw
 
 use strict;
-use warnings;
 
 use IO::File;
 use IO::String;
