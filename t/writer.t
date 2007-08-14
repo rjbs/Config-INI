@@ -131,7 +131,7 @@ eval { $W->write_string([ A => [ B => 1 ], A => [ B => 2 ] ]); };
 like($@, qr/multiple/, "you can't set property B in section A more than once");
 
 SKIP: {
-  eval "require File::Temp;" or skip "File::Temp not availabe", 2;
+  eval "require File::Temp;" or skip "File::Temp not availabe", 3;
 
   my ($fh, $fn) = File::Temp::tempfile(UNLINK => 1);
   close $fh;
