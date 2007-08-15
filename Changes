@@ -1,5 +1,8 @@
 Changelog for Config-INI-Reader
 
+0.006     2007-08-15
+          use -T instead of -t in tests; -t is a perl 5.008 feature
+
 0.005     2007-08-13
           add finalize method, lazy-load starting section method (this means
           that you can have starting_section die to prevent properties outside

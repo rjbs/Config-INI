@@ -9,11 +9,11 @@ Config::INI::Reader - a subclassable .ini-file parser
 
 =head1 VERSION
 
-version 0.005
+version 0.006
 
 =cut
 
-$Config::INI::Reader::VERSION = '0.005';
+$Config::INI::Reader::VERSION = '0.006';
 
 =head1 SYNOPSIS
 
