@@ -33,6 +33,10 @@ like($@, qr/no filename specified/i, 'read_file without args');
 SKIP: {
   eval "require File::Temp;" or skip "File::Temp not available", 1;
 
+  # This could probably be limited to being required for Cygwin.
+  eval "require filetest;"   or skip "filetest.pm not available", 1;
+  filetest->import('access');
+
   my ($fh, $fn) = File::Temp::tempfile(UNLINK => 1);
   close $fh;
 

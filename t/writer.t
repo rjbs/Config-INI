@@ -133,6 +133,10 @@ like($@, qr/multiple/, "you can't set property B in section A more than once");
 SKIP: {
   eval "require File::Temp;" or skip "File::Temp not availabe", 3;
 
+  # This could probably be limited to being required for Cygwin.
+  eval "require filetest;"   or skip "filetest.pm not available", 1;
+  filetest->import('access');
+
   my ($fh, $fn) = File::Temp::tempfile(UNLINK => 1);
   close $fh;
   unlink $fn;

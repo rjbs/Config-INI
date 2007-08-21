@@ -1,5 +1,8 @@
 Changelog for Config-INI-Reader
 
+0.007     2007-08-21
+          use filetest.pm in tests to avoid -r-related failures on Cygwin
+
 0.006     2007-08-15
           use -T instead of -t in tests; -t is a perl 5.008 feature
 
