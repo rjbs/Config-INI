@@ -9,11 +9,11 @@ Config::INI::Writer - a subclassable .ini-file emitter
 
 =head1 VERSION
 
-version 0.008
+version 0.009
 
 =cut
 
-$Config::INI::Writer::VERSION = '0.008';
+$Config::INI::Writer::VERSION = '0.009';
 
 =head1 SYNOPSIS
 

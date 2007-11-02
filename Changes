@@ -1,5 +1,8 @@
 Changelog for Config-INI-Reader
 
+0.009     2007-11-01
+          add placeholding Config::INI (content soon!)
+
 0.008     2007-10-31
           update Module::Install
 
