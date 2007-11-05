@@ -260,18 +260,18 @@ sub validate_input {
     my ($name, $props) = @$input[ $i, $i + 1 ];
     $seen{ $name } ||= {};
 
-    Carp::croak "section name '$name' contains illegal character"
-      if $name =~ /(?:\n|\s;)/;
+    Carp::croak "illegal section name '$name'"
+      if $name =~ /(?:\n|\s;|^\s|\s$)/;
 
     for (my $j = 0; $j < $#$props; $j += 2) {
       my $property = $props->[ $j ];
       my $value    = $props->[ $j + 1 ];
 
       Carp::croak "property name '$property' contains illegal character"
-        if $property =~ /(?:\n|=|\s;)]/;
+        if $property =~ /(?:\n|\s;|^\s|\s|=$)/;
 
       Carp::croak "value for $name.$property contains illegal character"
-        if defined $value and $value =~ /(?:\n|\s;)/;
+        if defined $value and $value =~ /(?:\n|\s;|^\s|\s$)/;
 
       if ( $seen{ $name }{ $property }++ ) {
         Carp::croak "multiple assignments found for $name.$property";

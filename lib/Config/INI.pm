@@ -43,7 +43,7 @@ not-quite-standardized "INI" format.
 
   space = ( <TAB> | " " ) *
   string-without-equals = string - "="
-  string                = ? a string of characters, excluding ; or EOL ?
+  string = ? 1+ characters; not ";" or EOL; begins and ends with non-space ?
 
 Of special note is the fact that I<no> escaping mechanism is defined, meaning
 that there is no way to include an EOL or semicolon (for example) in a value,
