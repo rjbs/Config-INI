@@ -9,11 +9,11 @@ Config::INI::Reader - a subclassable .ini-file parser
 
 =head1 VERSION
 
-version 0.009
+version 0.010
 
 =cut
 
-$Config::INI::Reader::VERSION = '0.009';
+$Config::INI::Reader::VERSION = '0.010';
 
 =head1 SYNOPSIS
 
@@ -50,9 +50,9 @@ C<$hash> will contain:
 =head1 DESCRIPTION
 
 Config::INI::Reader is I<yet another> config module implementing I<yet another>
-slightly different take on the undeniably easy to read ".ini" file format.  Its
-default behavior is nearly identical to that of L<Config::Tiny>, on which it is
-based.
+slightly different take on the undeniably easy to read L<".ini" file
+format|Config::INI>.  Its default behavior is quite similar to that of
+L<Config::Tiny>, on which it is based.
 
 The chief difference is that Config::INI::Reader is designed to be subclassed
 to allow for side-effects and self-reconfiguration to occur during the course
@@ -218,12 +218,12 @@ sub change_section {
 
 =head2 parse_value_assignment
 
-  my ($name, $value) = $reader->parse_property_line($line);
+  my ($name, $value) = $reader->parse_value_assignment($line);
 
 Given a line of input, this method decides whether the line is a property
-assignment.  If it is, it returns the name of the property and the value being
-assigned to it.  If the line is not a property assignment, the method returns
-false.
+value assignment.  If it is, it returns the name of the property and the value
+being assigned to it.  If the line is not a property assignment, the method
+returns false.
 
 =cut
 
@@ -255,7 +255,7 @@ This method returns the name of the starting section.  The default is: C<_>
 
 =cut
 
-sub starting_section { '_' }
+sub starting_section { q{_} }
 
 =head2 can_ignore
 
@@ -287,7 +287,7 @@ sub preprocess_line {
   my ($self, $line) = @_;
 
   # Remove inline comments
-  ${$line} =~ s/\s+;\s.+$//g;
+  ${$line} =~ s/\s+;.*$//g;
 }
 
 =head2 finalize
@@ -331,14 +331,9 @@ sub new {
 
 Bugs should be reported via the CPAN bug tracker at
 
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Config-INI-Reader>
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Config-INI>
 
 For other issues, or commercial enhancement or support, contact the author.
-
-=head1 THANKS
-
-Thanks to Florian Ragwitz for improving the subclassability of this module, and
-for helping me do some of my first merging with git(7).
 
 =head1 AUTHOR
 

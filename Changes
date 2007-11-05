@@ -1,5 +1,11 @@
 Changelog for Config-INI-Reader
 
+0.010     2007-11-04
+          BUG FIX: detect when we're dumping something we won't be able to read
+          BUG FIX: fix tests when filetest.pm is not available (pre-5.6)
+            (thanks to CPAN tester srezic)
+          DOCS: documentation of core file format in Config::INI
+
 0.009     2007-11-01
           add placeholding Config::INI (content soon!)
 

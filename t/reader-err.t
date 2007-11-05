@@ -4,7 +4,7 @@ use strict;
 
 use Config::INI::Reader;
 
-use Test::More tests => 6;
+use Test::More tests => 7;
 
 eval { Config::INI::Reader->read_file; };
 like($@, qr/no filename specified/i, 'read_file without args');
@@ -60,4 +60,11 @@ like($@, qr/no string provided/i, 'read_string without args');
   my $input = 'foo bar moo';
   eval { Config::INI::Reader->read_string($input); };
   like($@, qr/Syntax error at line 1: '$input'/i, 'syntax error');
+}
+
+{
+  # looks like a comment
+  my $input = "[foo ; bar]\nvalue = 1\n";
+  my $data  = eval { Config::INI::Reader->read_string($input); };
+  like($@, qr/Syntax error at line 1:/i, 'syntax error');
 }

@@ -2,7 +2,7 @@
 
 use strict;
 
-use Test::More tests => 16;
+use Test::More tests => 20;
 
 my $R = 'Config::INI::Reader';
 my $W = 'Config::INI::Writer';
@@ -134,7 +134,7 @@ SKIP: {
   eval "require File::Temp;" or skip "File::Temp not availabe", 3;
 
   # This could probably be limited to being required for Cygwin.
-  eval "require filetest;"   or skip "filetest.pm not available", 1;
+  eval "require filetest;"   or skip "filetest.pm not available", 3;
   filetest->import('access');
 
   my ($fh, $fn) = File::Temp::tempfile(UNLINK => 1);
@@ -179,3 +179,15 @@ like($@, qr/not a plain file/, "you can't write to a file that's -e -d");
 
 eval { $W->write_string(sub { 1 }) };
 like($@, qr/can't output CODE/, "you can't write out non-ARRAY/HASH data");
+
+eval { $W->write_string({ "[=]" => { a => 1 } }) };
+is($@, '', "a stupid section header ([=]) is allowed");
+
+eval { $W->write_string({ "[\n]" => { a => 1 } }) };
+like($@, qr/illegal/, "...but an impossible to parse one is not");
+
+eval { $W->write_string({ "[foo ;bar]" => { a => 1 } }) };
+like($@, qr/illegal/, "...we also can't emit things that would be comments");
+
+eval { $W->write_string({ "[foo;bar]" => { a => 1 } }) };
+is($@, '', "...but things -almost- like comments are okay");
