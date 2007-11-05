@@ -228,7 +228,7 @@ returns false.
 =cut
 
 sub parse_value_assignment {
-  return ($1, $2) if $_[1] =~ /^\s*([^=]+?)\s*=\s*(.*?)\s*$/;
+  return ($1, $2) if $_[1] =~ /^\s*([^=\s][^=]*?)\s*=\s*(.*?)\s*$/;
   return;
 }
 
