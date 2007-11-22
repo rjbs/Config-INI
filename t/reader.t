@@ -4,7 +4,7 @@ use strict;
 
 use IO::File;
 use IO::String;
-use Test::More tests => 7;
+use Test::More tests => 8;
 
 # Check their perl version
 use_ok('Config::INI::Reader');
@@ -85,3 +85,12 @@ END
   is_deeply($empty, {}, "an empty string gets an empty hashref");
 }
 
+{
+  # "0" is a valid section name
+  my $config = Config::INI::Reader->read_string("[0]\nfoo = 1\n");
+  is_deeply(
+    $config,
+    { 0 => { foo => 1 } },
+    "we can use 0 as a section name",
+  );
+}

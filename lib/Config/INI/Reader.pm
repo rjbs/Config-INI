@@ -9,11 +9,11 @@ Config::INI::Reader - a subclassable .ini-file parser
 
 =head1 VERSION
 
-version 0.010
+version 0.011
 
 =cut
 
-$Config::INI::Reader::VERSION = '0.010';
+$Config::INI::Reader::VERSION = '0.011';
 
 =head1 SYNOPSIS
 
@@ -140,7 +140,7 @@ sub read_handle {
     $self->preprocess_line(\$line);
 
     # Handle section headers
-    if (my $name = $self->parse_section_header($line)) {
+    if (defined (my $name = $self->parse_section_header($line))) {
       # Create the sub-hash if it doesn't exist.
       # Without this sections without keys will not
       # appear at all in the completed struct.

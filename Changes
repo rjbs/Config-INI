@@ -1,5 +1,8 @@
 Changelog for Config-INI-Reader
 
+0.011     2007-11-19
+          BUG FIX: "0" was not a valid section name
+
 0.010     2007-11-04
           BUG FIX: detect when we're dumping something we won't be able to read
           BUG FIX: fix tests when filetest.pm is not available (pre-5.6)
