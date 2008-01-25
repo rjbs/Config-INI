@@ -79,7 +79,7 @@ All throw an exception when they encounter an error.
 
 =head2 read_file
 
-  my $hash_ref = Config::INI::Reader->read($filename);
+  my $hash_ref = Config::INI::Reader->read_file($filename);
 
 Given a filename, this method returns a hashref of the contents of that file.
 
