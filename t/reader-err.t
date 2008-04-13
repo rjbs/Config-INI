@@ -48,7 +48,7 @@ SKIP: {
   }
 
   eval { Config::INI::Reader->read_file($fn); };
-  like($@, qr/couldn't read/, "can't read an unreadable file");
+  like($@, qr/(?:couldn't|can't) read/, "can't read an unreadable file");
 
   chmod 0666, $fh;
 }
