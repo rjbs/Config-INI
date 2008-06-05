@@ -1,5 +1,8 @@
 Changelog for Config-INI-Reader
 
+0.013     2008-06-05
+          refactored some of the read_* write_* stuff to Mixin::Linewise
+
 0.012     2008-04-12
           BUG FIX: allow for different error message on cygwin
 
