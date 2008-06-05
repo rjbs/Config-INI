@@ -9,11 +9,11 @@ Config::INI - simple .ini-file format
 
 =head1 VERSION
 
-version 0.012
+version 0.013
 
 =cut
 
-$Config::INI::VERSION = '0.012';
+$Config::INI::VERSION = '0.013';
 
 =head1 GRAMMAR
 
