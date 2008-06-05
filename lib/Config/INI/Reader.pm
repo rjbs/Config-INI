@@ -1,7 +1,7 @@
-
 use strict;
-
+use warnings;
 package Config::INI::Reader;
+use Mixin::Linewise::Readers;
 
 =head1 NAME
 
@@ -13,7 +13,7 @@ version 0.012
 
 =cut
 
-$Config::INI::Reader::VERSION = '0.012';
+our $VERSION = '0.012';
 
 =head1 SYNOPSIS
 
@@ -83,41 +83,11 @@ All throw an exception when they encounter an error.
 
 Given a filename, this method returns a hashref of the contents of that file.
 
-=cut
-
-sub read_file {
-  my ($invocant, $filename) = @_;
-
-  # Check the file
-  Carp::croak "no filename specified"           unless $filename;
-  Carp::croak "file '$filename' does not exist" unless -e $filename;
-  Carp::croak "'$filename' is not a plain file" unless -f _;
-
-  # Slurp in the file
-  my $handle = IO::File->new($filename, '<')
-    or Carp::croak "couldn't read file '$filename': $!";
-
-  $invocant->read_handle($handle);
-}
-
 =head2 read_string
 
   my $hash_ref = Config::INI::Reader->read_string($string);
 
 Given a string, this method returns a hashref of the contents of that string.
-
-=cut
-
-# Create an object from a string
-sub read_string {
-  my ($invocant, $string) = @_;
-
-  Carp::croak "no string provided" unless defined $string;
-
-  my $handle = IO::String->new($string);
-
-  $invocant->read_handle($handle);
-}
 
 =head2 read_handle
 

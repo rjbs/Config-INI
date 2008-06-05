@@ -1,7 +1,7 @@
-
 use strict;
-
+use warnings;
 package Config::INI::Writer;
+use Mixin::Linewise::Writers;
 
 =head1 NAME
 
@@ -13,7 +13,7 @@ version 0.012
 
 =cut
 
-$Config::INI::Writer::VERSION = '0.012';
+our $VERSION = '0.012';
 
 =head1 SYNOPSIS
 
@@ -91,11 +91,6 @@ The given data should be a hashref of hashrefs:
 
 All the reader methods throw an exception when they encounter an error.
 
-=cut
-
-use IO::File;
-use IO::String;
-
 =head2 write_file
 
   Config::INI::Writer->write_file($input, $filename);
@@ -106,41 +101,12 @@ named by C<$filename>.  If a file by that name exists, it is overwritten.
 This method will either succeed or raise an exception.  (Its return value is
 not defined.)
 
-=cut
-
-sub write_file {
-  my ($invocant, $data, $filename) = @_;
-
-  # Check the file
-  Carp::croak "no filename specified"           unless $filename;
-  Carp::croak "'$filename' is not a plain file" if -e $filename && ! -f _;
-
-  # Write out the file
-  my $handle = IO::File->new($filename, '>')
-    or Carp::croak "couldn't write to file '$filename': $!";
-
-  $invocant->write_handle($data, $handle);
-}
-
 =head2 write_string
 
   my $string = Config::INI::Writer->write_string($input);
 
 This method returns a string containing the INI content describing the given
 data.
-
-=cut
-
-sub write_string {
-  my ($invocant, $data) = @_;
-
-  my $string = '';
-  my $handle = IO::String->new($string);
-
-  $invocant->write_handle($data, $handle);
-
-  return $string;
-}
 
 =head2 write_handle
 
