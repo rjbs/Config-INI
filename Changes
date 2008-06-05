@@ -6,6 +6,9 @@ Changelog for Config-INI
 0.012     2008-04-12
           BUG FIX: allow for different error message on cygwin
 
+0.012     2008-??-??
+          fixed typo in docs (thanks HDP)
+
 0.011     2007-11-19
           BUG FIX: "0" was not a valid section name
 
