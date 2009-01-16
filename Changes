@@ -1,5 +1,8 @@
 Changelog for Config-INI
 
+0.014     2009-01-16
+          add repo to metadata
+
 0.013     2008-06-05
           refactored some of the read_* write_* stuff to Mixin::Linewise
 
