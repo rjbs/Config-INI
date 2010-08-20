@@ -1,4 +1,3 @@
-
 use strict;
 
 package Config::INI;
@@ -14,6 +13,14 @@ version 0.014
 =cut
 
 $Config::INI::VERSION = '0.014';
+
+=head1 SYNOPSIS
+
+    my $config_hash = Config::INI::Reader->read_file('config.ini');
+
+    Config::INI::Write->write_file({ somekey => 'somevalue' }, 'config.ini');
+
+See L<Config::INI::Writer> and L<Config::INI::Reader> for more examples.
 
 =head1 GRAMMAR
 
