@@ -33,7 +33,7 @@ If <$hash> contains:
 
 Then when your program contains:
 
-  my $hash = Config::INI::Writer->write_file($hash, 'family.ini');
+  Config::INI::Writer->write_file($hash, 'family.ini');
 
 F<family.ini> will contains:
 
