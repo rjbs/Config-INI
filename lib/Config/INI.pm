@@ -8,11 +8,11 @@ Config::INI - simple .ini-file format
 
 =head1 VERSION
 
-version 0.014
+version 0.015
 
 =cut
 
-$Config::INI::VERSION = '0.014';
+$Config::INI::VERSION = '0.015';
 
 =head1 SYNOPSIS
 
