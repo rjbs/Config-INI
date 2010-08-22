@@ -16,9 +16,13 @@ $Config::INI::VERSION = '0.014';
 
 =head1 SYNOPSIS
 
-    my $config_hash = Config::INI::Reader->read_file('config.ini');
+Config-INI comes with code for reading F<.ini> files:
 
-    Config::INI::Write->write_file({ somekey => 'somevalue' }, 'config.ini');
+  my $config_hash = Config::INI::Reader->read_file('config.ini');
+
+...and for writing C<.ini> files:
+
+  Config::INI::Writer->write_file({ somekey => 'somevalue' }, 'config.ini');
 
 See L<Config::INI::Writer> and L<Config::INI::Reader> for more examples.
 
