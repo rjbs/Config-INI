@@ -3,17 +3,20 @@ use warnings;
 package Config::INI::Writer;
 use Mixin::Linewise::Writers;
 
+use Carp ();
+our @CARP_NOT = qw(Mixin::Linewise::Writers);
+
 =head1 NAME
 
 Config::INI::Writer - a subclassable .ini-file emitter
 
 =head1 VERSION
 
-version 0.015
+version 0.016
 
 =cut
 
-our $VERSION = '0.015';
+our $VERSION = '0.016';
 
 =head1 SYNOPSIS
 

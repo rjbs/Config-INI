@@ -9,11 +9,11 @@ Config::INI::Reader - a subclassable .ini-file parser
 
 =head1 VERSION
 
-version 0.015
+version 0.016
 
 =cut
 
-our $VERSION = '0.015';
+our $VERSION = '0.016';
 
 =head1 SYNOPSIS
 
@@ -63,6 +63,8 @@ of reading its input.
 use Carp ();
 use IO::File;
 use IO::String;
+
+our @CARP_NOT = qw(Mixin::Linewise::Readers);
 
 =head1 METHODS FOR READING CONFIG
 

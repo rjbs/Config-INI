@@ -1,5 +1,8 @@
 Changelog for Config-INI
 
+0.016     2010-09-04
+          add Mixin::Linewise to CARP_NOT -- better reporting of error location
+
 0.015     2010-08-22
           documentation improvements (thanks, castaway)
 
