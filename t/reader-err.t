@@ -37,7 +37,7 @@ SKIP: {
   eval "require filetest;"   or skip "filetest.pm not available", 1;
   filetest->import('access');
 
-  my ($fh, $fn) = File::Temp::tempfile(UNLINK => 1);
+  my ($fh, $fn) = File::Temp::tempfile('tempXXXXX', UNLINK => 1);
   close $fh;
 
   chmod 0222, $fn;
