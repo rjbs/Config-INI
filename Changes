@@ -1,6 +1,8 @@
 Changelog for Config-INI
 
 {{$NEXT}}
+          avoid test failures on Win32 by using . instead of TMPDIR
+          for writing test files (thanks, Ahmad M. Zawawi)
 
 0.016     2010-09-04
           add Mixin::Linewise to CARP_NOT -- better reporting of error location
