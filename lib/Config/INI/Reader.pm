@@ -2,18 +2,7 @@ use strict;
 use warnings;
 package Config::INI::Reader;
 use Mixin::Linewise::Readers;
-
-=head1 NAME
-
-Config::INI::Reader - a subclassable .ini-file parser
-
-=head1 VERSION
-
-version 0.016
-
-=cut
-
-our $VERSION = '0.016';
+# ABSTRACT: a subclassable .ini-file parser
 
 =head1 SYNOPSIS
 
@@ -291,34 +280,9 @@ sub new {
   bless $self => $class;
 }
 
-=head1 TODO
-
-=over
-
-=item * more tests
-
-=back
-
-=head1 BUGS
-
-Bugs should be reported via the CPAN bug tracker at
-
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Config-INI>
-
-For other issues, or commercial enhancement or support, contact the author.
-
-=head1 AUTHOR
-
-Ricardo SIGNES, C<< E<lt>rjbs@cpan.orgE<gt> >>
+=head1 ORIGIN
 
 Originaly derived from L<Config::Tiny>, by Adam Kennedy.
-
-=head1 COPYRIGHT
-
-Copyright 2007, Ricardo SIGNES.
-
-This program is free software; you may redistribute it and/or modify it under
-the same terms as Perl itself.
 
 =cut
 

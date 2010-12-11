@@ -2,21 +2,10 @@ use strict;
 use warnings;
 package Config::INI::Writer;
 use Mixin::Linewise::Writers;
+# ABSTRACT: a subclassable .ini-file emitter
 
 use Carp ();
 our @CARP_NOT = qw(Mixin::Linewise::Writers);
-
-=head1 NAME
-
-Config::INI::Writer - a subclassable .ini-file emitter
-
-=head1 VERSION
-
-version 0.016
-
-=cut
-
-our $VERSION = '0.016';
 
 =head1 SYNOPSIS
 
@@ -470,38 +459,5 @@ sub new {
 
   return $self;
 }
-
-=head1 TODO
-
-=over
-
-=item * more tests
-
-=back
-
-=head1 BUGS
-
-Bugs should be reported via the CPAN bug tracker at
-
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Config-INI>
-
-For other issues, or commercial enhancement or support, contact the author.
-
-=head1 AUTHOR
-
-Ricardo SIGNES, C<< E<lt>rjbs@cpan.orgE<gt> >>
-
-Originaly derived from L<Config::Tiny>, by Adam Kennedy.  The first pass at
-refactoring this code into Config::INI::Writer was performed by Florian
-Ragwitz.
-
-=head1 COPYRIGHT
-
-Copyright 2007, Ricardo SIGNES.
-
-This program is free software; you may redistribute it and/or modify it under
-the same terms as Perl itself.
-
-=cut
 
 1;
