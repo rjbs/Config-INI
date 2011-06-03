@@ -1,6 +1,7 @@
 Changelog for Config-INI
 
 {{$NEXT}}
+          bump up version of IO::File required (thanks, ABH!)
 
 0.017     2010-12-11 10:20:34 America/New_York
           avoid test failures on Win32 by using . instead of TMPDIR
@@ -21,7 +22,6 @@ Changelog for Config-INI
 0.012     2008-04-12
           BUG FIX: allow for different error message on cygwin
 
-0.012     2008-??-??
           fixed typo in docs (thanks HDP)
 
 0.011     2007-11-19

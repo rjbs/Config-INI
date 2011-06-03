@@ -50,7 +50,7 @@ of reading its input.
 =cut
 
 use Carp ();
-use IO::File;
+use IO::File 1.14;
 use IO::String;
 
 our @CARP_NOT = qw(Mixin::Linewise::Readers);
