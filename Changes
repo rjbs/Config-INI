@@ -1,6 +1,7 @@
 Changelog for Config-INI
 
 {{$NEXT}}
+          provide handle_unparsed_line
 
 0.018     2011-06-02 21:51:50 America/New_York
           bump up version of IO::File required (thanks, ABH!)

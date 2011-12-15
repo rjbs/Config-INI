@@ -114,8 +114,7 @@ sub read_handle {
       next;
     }
 
-    my $lineno = $handle->input_line_number;
-    Carp::croak "Syntax error at line $lineno: '$line'";
+    $self->handle_unparsed_line($handle, $line);
   }
 
   $self->finalize;
@@ -249,6 +248,21 @@ sub preprocess_line {
 
   # Remove inline comments
   ${$line} =~ s/\s+;.*$//g;
+}
+
+=head2 handle_unparsed_line
+
+  $reader->handle_unparsed_line( $io, $line );
+
+This method is called when the reader encounters a line that doesn't look like
+anything it recognizes.  By default, it throws an exception.
+
+=cut
+
+sub handle_unparsed_line {
+  my ($self, $handle, $line) = @_;
+  my $lineno = $handle->input_line_number;
+  Carp::croak "Syntax error at line $lineno: '$line'";
 }
 
 =head2 finalize
