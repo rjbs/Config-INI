@@ -109,9 +109,23 @@ sub read_handle {
       next LINE;
     }
 
+    if (my ($name, $terminator) = $self->parse_heredoc_assignment($line)) {
+      my $value;
+    HEREDOC:
+      while (my $line = $handle->getline) {
+        last HEREDOC if $self->match_heredoc_terminator($line, $terminator);
+        $value .= $line;
+      }
+      if ($value) {
+        chomp($value);
+        $self->set_value($name, $value);
+      }
+      next LINE;
+    }
+    
     if (my ($name, $value) = $self->parse_value_assignment($line)) {
       $self->set_value($name, $value);
-      next;
+      next LINE;
     }
 
     $self->handle_unparsed_line($handle, $line);
@@ -190,6 +204,36 @@ returns false.
 sub parse_value_assignment {
   return ($1, $2) if $_[1] =~ /^\s*([^=\s][^=]*?)\s*=\s*(.*?)\s*$/;
   return;
+}
+
+=head2 parse_heredoc_assignment
+
+  my ($name, $terminator) = $reader->parse_heredoc_assignment($line);
+
+Given a line of input, this method decides whether the line is a
+heredoc style property value assignment.  If it is, it returns the
+name of the property and the string that terminates the heredoc.  If the line
+is not a property assignment, the method returns false.
+
+=cut
+
+sub parse_heredoc_assignment {
+  return ($1, $2) if $_[1] =~ /^\s*([^=\s][^=]*?)\s*=\s*<<\s*([^\s]*?)\s*$/;
+  return;
+}
+
+=head2 match_heredoc_terminator
+
+  my $matched = $reader->match_heredoc_terminator($line, $terminator);
+
+Given a line of input and a terminator string, this method decides
+whether the line matches the terminator.  It returns true if the line
+matches the terminator, false otherwise.
+
+=cut
+
+sub match_heredoc_terminator {
+  return $_[1] =~ /$_[2]$/;
 }
 
 =head2 set_value
