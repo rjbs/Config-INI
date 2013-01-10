@@ -109,23 +109,9 @@ sub read_handle {
       next LINE;
     }
 
-    if (my ($name, $terminator) = $self->parse_heredoc_assignment($line)) {
-      my $value;
-      my $got_terminator;
-    HEREDOC:
-      while (my $line = $handle->getline) {
-        if ($self->match_heredoc_terminator($line, $terminator)) {
-          $got_terminator++;
-          last HEREDOC;
-        }
-        $value .= $line;
-      }
-      die "Ran out of input without finding heredoc terminator (\"$terminator\")"
-        unless $got_terminator;
-      if ($value) {
-        chomp($value);
-        $self->set_value($name, $value);
-      }
+    # handle heredocs (may read more lines from handle, may die is missing terminator)
+    if (my ($name, $value) = $self->parse_heredoc_assignment($line, $handle)) {
+      $self->set_value($name, $value);
       next LINE;
     }
     
@@ -214,18 +200,40 @@ sub parse_value_assignment {
 
 =head2 parse_heredoc_assignment
 
-  my ($name, $terminator) = $reader->parse_heredoc_assignment($line);
+  my ($name, $value) = $reader->parse_heredoc_assignment($line, $handle);
 
 Given a line of input, this method decides whether the line is a
 heredoc style property value assignment.  If it is, it returns the
-name of the property and the string that terminates the heredoc.  If the line
+name of the property and the value being assigned to it.  If the line
 is not a property assignment, the method returns false.
+
+This method will die with a useful error message if it runs out of
+input without finding the heredoc terminator.
 
 =cut
 
 sub parse_heredoc_assignment {
-  return ($1, $2) if $_[1] =~ /^\s*([^=\s][^=]*?)\s*=\s*<<\s*([^\s]*?)\s*$/;
-  return;
+  my ($self, $line, $handle) = @_;
+  my $heredoc_starting_line_number = $handle->input_line_number;
+
+  return unless $line =~ /^\s*([^=\s][^=]*?)\s*=\s*<<\s*([^\s]*?)\s*$/;
+  my ($name, $terminator) = ($1, $2);
+
+  my $value = '';
+  my $saw_terminator;
+ HEREDOC:
+  while (my $line = $handle->getline) {
+    last HEREDOC
+      if ($saw_terminator = $self->match_heredoc_terminator($line, $terminator));
+    $value .= $line;
+  }
+  chomp($value);
+
+  die "Ran out of input without finding heredoc terminator (\"$terminator\")," .
+    " heredoc began at line $heredoc_starting_line_number"
+    unless $saw_terminator;
+
+  return ($name, $value);
 }
 
 =head2 match_heredoc_terminator

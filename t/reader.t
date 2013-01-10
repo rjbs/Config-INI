@@ -85,6 +85,7 @@ my $here_expected = {
     root => 'something',
   },
   section => {
+    zero  => "",
     one   => "one is a fine number, it is always first in line!",
     two   => "two is also a fine\nwith more than one line!",
     whitespace  => "test some whitespace around the heredoc terminator.",
