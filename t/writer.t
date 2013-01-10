@@ -14,10 +14,12 @@ my $data = {
     a => 1,
     b => 2,
     c => 3,
+    h => "4\n5\n6",
   },
   foo => {
     bar  => 'baz',
     baz  => 'bar',
+    here => "four score\nand seven years ago",
   },
 };
 

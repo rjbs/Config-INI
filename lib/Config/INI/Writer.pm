@@ -229,7 +229,7 @@ sub validate_input {
         if $property =~ /(?:\n|\s;|^\s|\s|=$)/;
 
       Carp::croak "value for $name.$property contains illegal character"
-        if defined $value and $value =~ /(?:\n|\s;|^\s|\s$)/;
+        if defined $value and $value =~ /(?:\s;|^\s|\s$)/;
 
       if ( $seen{ $name }{ $property }++ ) {
         Carp::croak "multiple assignments found for $name.$property";
@@ -379,6 +379,9 @@ sub stringify_value_assignment {
 
   return '' unless defined $value;
 
+  return $name . ' = ' . $self->stringify_value_as_heredoc($value) . "\n"
+    unless (index($value, "\n") < 0);
+  
   return $name . ' = ' . $self->stringify_value($value) . "\n";
 }
 
@@ -397,6 +400,39 @@ sub stringify_value {
   $value = defined $value ? $value : '';
 
   return $value;
+}
+
+=head2 next_heredoc_terminator
+
+  my $terminator = $writer->next_heredoc_terminator();
+
+This method returns a unique string that can be used to terminate a
+heredoc.
+
+=cut
+
+our $_heredoc_id = 0;
+sub next_heredoc_terminator {
+  return "EOH_" . $_heredoc_id++;
+}
+
+=head2 stringify_value_as_heredoc
+
+  my $string = $writer->stringify_value_as_heredoc($value);
+
+This method returns the string, in heredoc format, that will represent
+the given value in a property assignment.
+
+It uses the L<next_heredoc_terminator> method to generate a unique
+heredoc terminator.
+
+=cut
+
+
+sub stringify_value_as_heredoc {
+  my ($self, $value) = @_;
+  my $terminator = $self->next_heredoc_terminator;
+  return "<< $terminator\n$value\n$terminator";
 }
 
 =head2 stringify_section_header

@@ -109,9 +109,15 @@ sub read_handle {
       next LINE;
     }
 
+    # handle heredocs (may read more lines from handle, may die is missing terminator)
+    if (my ($name, $value) = $self->parse_heredoc_assignment($line, $handle)) {
+      $self->set_value($name, $value);
+      next LINE;
+    }
+    
     if (my ($name, $value) = $self->parse_value_assignment($line)) {
       $self->set_value($name, $value);
-      next;
+      next LINE;
     }
 
     $self->handle_unparsed_line($handle, $line);
@@ -190,6 +196,58 @@ returns false.
 sub parse_value_assignment {
   return ($1, $2) if $_[1] =~ /^\s*([^=\s][^=]*?)\s*=\s*(.*?)\s*$/;
   return;
+}
+
+=head2 parse_heredoc_assignment
+
+  my ($name, $value) = $reader->parse_heredoc_assignment($line, $handle);
+
+Given a line of input, this method decides whether the line is a
+heredoc style property value assignment.  If it is, it returns the
+name of the property and the value being assigned to it.  If the line
+is not a property assignment, the method returns false.
+
+This method will die with a useful error message if it runs out of
+input without finding the heredoc terminator.
+
+=cut
+
+sub parse_heredoc_assignment {
+  my ($self, $line, $handle) = @_;
+  my $heredoc_starting_line_number = $handle->input_line_number;
+
+  return unless $line =~ /^\s*([^=\s][^=]*?)\s*=\s*<<\s*([^\s]*?)\s*$/;
+  my ($name, $terminator) = ($1, $2);
+
+  my $value = '';
+  my $saw_terminator;
+ HEREDOC:
+  while (my $line = $handle->getline) {
+    last HEREDOC
+      if ($saw_terminator = $self->match_heredoc_terminator($line, $terminator));
+    $value .= $line;
+  }
+  chomp($value);
+
+  die "Ran out of input without finding heredoc terminator (\"$terminator\")," .
+    " heredoc began at line $heredoc_starting_line_number"
+    unless $saw_terminator;
+
+  return ($name, $value);
+}
+
+=head2 match_heredoc_terminator
+
+  my $matched = $reader->match_heredoc_terminator($line, $terminator);
+
+Given a line of input and a terminator string, this method decides
+whether the line matches the terminator.  It returns true if the line
+matches the terminator, false otherwise.
+
+=cut
+
+sub match_heredoc_terminator {
+  return $_[1] =~ /$_[2]$/;
 }
 
 =head2 set_value
