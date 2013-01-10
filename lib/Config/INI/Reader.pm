@@ -111,11 +111,17 @@ sub read_handle {
 
     if (my ($name, $terminator) = $self->parse_heredoc_assignment($line)) {
       my $value;
+      my $got_terminator;
     HEREDOC:
       while (my $line = $handle->getline) {
-        last HEREDOC if $self->match_heredoc_terminator($line, $terminator);
+        if ($self->match_heredoc_terminator($line, $terminator)) {
+          $got_terminator++;
+          last HEREDOC;
+        }
         $value .= $line;
       }
+      die "Ran out of input without finding heredoc terminator (\"$terminator\")"
+        unless $got_terminator;
       if ($value) {
         chomp($value);
         $self->set_value($name, $value);

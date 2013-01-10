@@ -95,6 +95,20 @@ my $here_expected = {
 is_deeply($here_hashref, $here_expected,
           'Config structure w/ heredoc matches expected');
 
+{
+  my $fubar_string = <<END;
+a = b
+c = <<EOH
+now is the time
+for something or other
+END
+  my $hashref;
+  eval { $hashref = Config::INI::Reader->read_string( $fubar_string ); };
+  like($@, qr/Ran out of input.*\("EOH"\)/,
+       "Heredoc without a terminator dies as expected");
+}
+         
+
 #####################################################################
 # Bugs that happened we don't want to happen again
 
