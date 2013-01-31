@@ -39,7 +39,7 @@ now is the time
 for something or other
 END
   my $hashref;
-  eval { $hashref = Config::INI::Reader->read_string( $fubar_string ); };
+  eval { $hashref = Config::INI::Reader::HereDoc->read_string( $fubar_string ); };
   like($@, qr/Ran out of input.*\("EOH"\)/,
        "Heredoc without a terminator dies as expected");
 }
