@@ -33,7 +33,7 @@ my $expected = {
 
 is_deeply($hashref, $expected, 'Config structure matches expected');
 
-# Add some stuff to the trivial config and check write_string() for it
+# Add some stuff to the trivial config and check read_string() for it
 my $Trivial = {};
 $Trivial->{_} = { root1 => 'root2' };
 $Trivial->{section} = {
