@@ -111,7 +111,7 @@ sub read_handle {
 
     if (my ($name, $value) = $self->parse_value_assignment($line)) {
       $self->set_value($name, $value);
-      next;
+      next LINE;
     }
 
     $self->handle_unparsed_line($handle, $line);
