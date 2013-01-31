@@ -196,6 +196,33 @@ sub preprocess_input {
   return \@new_data;
 }
 
+=head2 invalid_section_name_regexp
+
+  Carp::croak "section name contains illegal character"
+    if $name =~ $writer->invalid_section_name_regexp();
+
+=cut
+
+sub invalid_section_name_regexp { qr/(?:\n|\s;|^\s|\s$)/ }
+
+=head2 invalid_property_name_regexp
+
+  Carp::croak "property name contains illegal character"
+    if $name =~ $writer->invalid_property_name_regexp();
+
+=cut
+
+sub invalid_property_name_regexp { qr/(?:\n|\s;|^\s|\s|=$)/ }
+
+=head2 invalid_value_regexp
+
+  Carp::croak "value contains illegal character"
+    if $value =~ $writer->invalid_value_regexp();
+
+=cut
+
+sub invalid_value_regexp { qr/(?:\n|\s;|^\s|\s$)/ }
+
 =head2 validate_input
 
   $writer->validate_input($input);
@@ -220,17 +247,17 @@ sub validate_input {
     $seen{ $name } ||= {};
 
     Carp::croak "illegal section name '$name'"
-      if $name =~ /(?:\n|\s;|^\s|\s$)/;
+      if $name =~ $self->invalid_section_name_regexp;
 
     for (my $j = 0; $j < $#$props; $j += 2) {
       my $property = $props->[ $j ];
       my $value    = $props->[ $j + 1 ];
 
       Carp::croak "property name '$property' contains illegal character"
-        if $property =~ /(?:\n|\s;|^\s|\s|=$)/;
+        if $property =~ $self->invalid_property_name_regexp;
 
       Carp::croak "value for $name.$property contains illegal character"
-        if defined $value and $value =~ /(?:\n|\s;|^\s|\s$)/;
+        if defined $value and $value =~ $self->invalid_value_regexp;
 
       if ( $seen{ $name }{ $property }++ ) {
         Carp::croak "multiple assignments found for $name.$property";
