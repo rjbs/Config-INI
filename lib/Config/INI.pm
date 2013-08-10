@@ -64,7 +64,7 @@ bundled in the Config-INI distribution.  These classes are designed for easy
 subclassing, so it should be easy to replace their behavior with whatever
 behavior your want.
 
-Patches, feature requets, and bug reports are welcome -- but I'm more
+Patches, feature requests, and bug reports are welcome -- but I'm more
 interested in making sure you can write a subclass that does what you need, and
 less in making Config-INI do what you want directly.
 
