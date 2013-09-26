@@ -57,14 +57,17 @@ handles values with embedded newlines by writing them out in heredoc format.
 
 These methods extend behavior from L<Config::INI::Writer>.
 
-=head2 invalid_value_regexp
+=head2 is_valid_value
 
   Carp::croak "value contains illegal character"
-    if $value =~ $writer->invalid_value_regexp();
+    unless $writer->is_valid_value($value);
 
 =cut
 
-sub invalid_value_regexp { qr/(?:\s;|^\s|\s$)/ }
+sub is_valid_value {
+    my ($self, $value) = @_;
+    return $value !~ qr/(?:\s;|^\s|\s$)/
+}
 
 =head2 stringify_value_assignment
 
