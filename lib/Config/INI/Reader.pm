@@ -94,8 +94,11 @@ sub read_handle {
 
   my $self = ref $invocant ? $invocant : $invocant->new;
 
+  # easy access to handle for subclasses
+  $self->{handle} = $handle;
+
   # parse the file
-  LINE: while (my $line = $handle->getline) {
+  LINE: while (my $line = $self->{handle}->getline) {
     next LINE if $self->can_ignore($line);
 
     $self->preprocess_line(\$line);
@@ -114,7 +117,7 @@ sub read_handle {
       next LINE;
     }
 
-    $self->handle_unparsed_line($handle, $line);
+    $self->handle_unparsed_line($line);
   }
 
   $self->finalize;
@@ -260,8 +263,8 @@ anything it recognizes.  By default, it throws an exception.
 =cut
 
 sub handle_unparsed_line {
-  my ($self, $handle, $line) = @_;
-  my $lineno = $handle->input_line_number;
+  my ($self, $line) = @_;
+  my $lineno = $self->{handle}->input_line_number;
   Carp::croak "Syntax error at line $lineno: '$line'";
 }
 
