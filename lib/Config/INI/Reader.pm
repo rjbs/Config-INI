@@ -266,8 +266,8 @@ anything it recognizes.  By default, it throws an exception.
 =cut
 
 sub handle_unparsed_line {
-  my ($self, $line) = @_;
-  my $lineno = $self->{handle}->input_line_number;
+  my ($self, $handle, $line) = @_;
+  my $lineno = $handle->input_line_number;
   Carp::croak "Syntax error at line $lineno: '$line'";
 }
 
