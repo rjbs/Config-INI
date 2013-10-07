@@ -99,12 +99,12 @@ sub read_handle {
       Carp::confess("input handle appears to start with a BOM");
     }
 
-    next LINE if $self->can_ignore($line);
+    next LINE if $self->can_ignore($line, $handle);
 
     $self->preprocess_line(\$line);
 
     # Handle section headers
-    if (defined (my $name = $self->parse_section_header($line))) {
+    if (defined (my $name = $self->parse_section_header($line, $handle))) {
       # Create the sub-hash if it doesn't exist.
       # Without this sections without keys will not
       # appear at all in the completed struct.
@@ -117,7 +117,7 @@ sub read_handle {
       next LINE;
     }
 
-    $self->handle_unparsed_line($handle, $line);
+    $self->handle_unparsed_line($line, $handle);
   }
 
   $self->finalize;
@@ -145,7 +145,7 @@ sub current_section {
 
 =head2 parse_section_header
 
-  my $name = $reader->parse_section_header($line);
+  my $name = $reader->parse_section_header($line, $handle);
 
 Given a line of input, this method decides whether the line is a section-change
 declaration.  If it is, it returns the name of the section to which to change.
@@ -222,7 +222,7 @@ sub starting_section { q{_} }
 
 =head2 can_ignore
 
-  do_nothing if $reader->can_ignore($line)
+  do_nothing if $reader->can_ignore($line, $handle)
 
 This method returns true if the given line of input is safe to ignore.  The
 default implementation ignores lines that contain only whitespace or comments.
@@ -230,7 +230,7 @@ default implementation ignores lines that contain only whitespace or comments.
 =cut
 
 sub can_ignore {
-  my ($self, $line) = @_;
+  my ($self, $line, $handle) = @_;
 
   # Skip comments and empty lines
   return $line =~ /\A\s*(?:;|$)/ ? 1 : 0;
@@ -255,7 +255,7 @@ sub preprocess_line {
 
 =head2 handle_unparsed_line
 
-  $reader->handle_unparsed_line( $io, $line );
+  $reader->handle_unparsed_line( $line, $handle );
 
 This method is called when the reader encounters a line that doesn't look like
 anything it recognizes.  By default, it throws an exception.
@@ -263,7 +263,7 @@ anything it recognizes.  By default, it throws an exception.
 =cut
 
 sub handle_unparsed_line {
-  my ($self, $handle, $line) = @_;
+  my ($self, $line, $handle) = @_;
   my $lineno = $handle->input_line_number;
   Carp::croak "Syntax error at line $lineno: '$line'";
 }
