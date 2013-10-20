@@ -1,7 +1,10 @@
 Changelog for Config-INI
 
 {{$NEXT}}
-          typo fixes in docs (thanks, David Steinbrunner!)
+
+0.021     2013-10-20 11:33:59 America/New_York
+        - throw an exception if line 1 appears to start with a UTF-8 BOM
+        - typo fixes in docs (thanks, David Steinbrunner!)
 
 0.020     2013-07-01 21:30:50 America/New_York
           update bugtracker
