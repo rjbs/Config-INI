@@ -1,10 +1,10 @@
 #!perl
-
 use strict;
+use warnings;
 
 use Config::INI::Reader;
 
-use Test::More tests => 7;
+use Test::More tests => 9;
 
 eval { Config::INI::Reader->read_file; };
 like($@, qr/no filename specified/i, 'read_file without args');
@@ -41,7 +41,7 @@ SKIP: {
   close $fh;
 
   chmod 0222, $fn;
-  
+
   if (-r $fn) {
     chmod 0666, $fh;
     skip "chmoding file 0222 left it -r", 1;
@@ -67,4 +67,14 @@ like($@, qr/no string provided/i, 'read_string without args');
   my $input = "[foo ; bar]\nvalue = 1\n";
   my $data  = eval { Config::INI::Reader->read_string($input); };
   like($@, qr/Syntax error at line 1:/i, 'syntax error');
+}
+
+{
+  my $ok = eval {
+    my $hashref = Config::INI::Reader->read_file( 'examples/utf8-bom.ini' );
+    1;
+  };
+  my $error = $@;
+  ok( ! $ok, "we can't read a UTF-8 file that starts with a BOM");
+  like($error, qr/BOM/, "the error message mentions a BOM");
 }
