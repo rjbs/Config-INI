@@ -3,7 +3,6 @@
 use strict;
 
 use IO::File;
-use IO::String;
 use Test::More tests => 8;
 
 # Check their perl version
@@ -68,8 +67,9 @@ END
   my $fh = IO::File->new('examples/simple.ini', 'r');
   my $data = do { local $/ = undef; <$fh> };
 
+  open my $io, '<', \$data or die "can't open in memory string: $!";
   is_deeply(
-    Config::INI::Reader->new->read_handle( IO::String->new($data) ),
+    Config::INI::Reader->new->read_handle( $io ),
     $expected,
     '->read_handle returns expected value'
   );
