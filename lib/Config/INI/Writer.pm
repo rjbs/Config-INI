@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 package Config::INI::Writer;
+
 use Mixin::Linewise::Writers;
 # ABSTRACT: a subclassable .ini-file emitter
 

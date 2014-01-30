@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 package Config::INI::Reader;
+
 use Mixin::Linewise::Readers;
 # ABSTRACT: a subclassable .ini-file parser
 
