@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Config::INI::Reader;
 
-use Mixin::Linewise::Readers;
+use Mixin::Linewise::Readers 0.100;
 # ABSTRACT: a subclassable .ini-file parser
 
 =head1 SYNOPSIS
