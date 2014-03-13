@@ -1,6 +1,8 @@
 Changelog for Config-INI
 
 {{$NEXT}}
+
+0.023     2014-03-13 10:21:15+01:00 Europe/Paris
         - specify minimum Mixin::Linewise requirement (thanks, Andreas Koenig
           and Smylers)
 
