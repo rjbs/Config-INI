@@ -1,6 +1,8 @@
 Changelog for Config-INI
 
 {{$NEXT}}
+
+0.024     2014-04-05 21:31:54-04:00 America/New_York
         - MIGHT BREAK YOUR CODE (but probably won't):
           handle_unparsed_line now receives its arguments in reversed order
         - new methods exist and more methods now receive the filehandle to make
