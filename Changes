@@ -1,6 +1,7 @@
 Changelog for Config-INI
 
 {{$NEXT}}
+        - run preprocess_line before can_ignore
         - bump up required Mixin::Linewise to help out Win32 users
 
 0.024     2014-04-05 21:31:54-04:00 America/New_York

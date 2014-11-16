@@ -99,9 +99,9 @@ sub read_handle {
       Carp::confess("input handle appears to start with a BOM");
     }
 
-    next LINE if $self->can_ignore($line, $handle);
-
     $self->preprocess_line(\$line);
+
+    next LINE if $self->can_ignore($line, $handle);
 
     # Handle section headers
     if (defined (my $name = $self->parse_section_header($line, $handle))) {
@@ -226,6 +226,8 @@ sub starting_section { q{_} }
 
 This method returns true if the given line of input is safe to ignore.  The
 default implementation ignores lines that contain only whitespace or comments.
+
+This is run I<after> L<preprocess_line>.
 
 =cut
 
