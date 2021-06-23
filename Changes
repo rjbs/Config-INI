@@ -1,6 +1,7 @@
 Changelog for Config-INI
 
 {{$NEXT}}
+        - require Mixin::Linewise v0.110 to cope with new error message
 
 0.026     2021-06-20 17:14:32-04:00 America/New_York
         - update author contact info
