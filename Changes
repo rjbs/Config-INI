@@ -1,6 +1,8 @@
 Changelog for Config-INI
 
 {{$NEXT}}
+
+0.028     2022-12-31 21:02:59-05:00 America/New_York
         - update author contact info
         - this library now requires perl v5.12
 
