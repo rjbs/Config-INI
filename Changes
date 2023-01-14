@@ -1,6 +1,8 @@
 Changelog for Config-INI
 
 {{$NEXT}}
+
+0.029     2023-01-13 20:57:41-05:00 America/New_York
         - fix typo in Pod
         - slightly clean up some archaicisms in source
 
