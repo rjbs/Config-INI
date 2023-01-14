@@ -159,7 +159,7 @@ SKIP: {
   );
 
   chmod 0444, $fn;
-  
+
   if (-w $fn) {
     chmod 0666, $fh;
     skip "chmoding file 0444 left it -w", 1;
