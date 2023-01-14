@@ -1,4 +1,4 @@
-use strict;
+use v5.12.0;
 use warnings;
 package Config::INI::Writer;
 
@@ -431,7 +431,7 @@ property assignment.
 sub stringify_value {
   my ($self, $value) = @_;
 
-  $value = defined $value ? $value : '';
+  $value //= q{};
 
   return $value;
 }

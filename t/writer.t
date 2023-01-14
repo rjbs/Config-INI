@@ -1,8 +1,7 @@
-#!perl
+use v5.12.0;
+use warnings;
 
-use strict;
-
-use Test::More tests => 20;
+use Test::More;
 
 my $R = 'Config::INI::Reader';
 my $W = 'Config::INI::Writer';
@@ -191,3 +190,5 @@ like($@, qr/illegal/, "...we also can't emit things that would be comments");
 
 eval { $W->write_string({ "[foo;bar]" => { a => 1 } }) };
 is($@, '', "...but things -almost- like comments are okay");
+
+done_testing;

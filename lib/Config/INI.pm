@@ -1,4 +1,4 @@
-use strict;
+use v5.12.0;
 use warnings;
 package Config::INI;
 # ABSTRACT: simple .ini-file format

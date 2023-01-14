@@ -1,4 +1,4 @@
-use strict;
+use v5.12.0;
 use warnings;
 package Config::INI::Reader;
 
@@ -140,7 +140,7 @@ been set, it returns the result of calling the C<starting_section> method.
 =cut
 
 sub current_section {
-  defined $_[0]->{section} ? $_[0]->{section} : $_[0]->starting_section;
+  $_[0]->{section} // $_[0]->starting_section;
 }
 
 =head2 parse_section_header
