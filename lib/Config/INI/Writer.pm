@@ -10,7 +10,7 @@ our @CARP_NOT = qw(Mixin::Linewise::Writers);
 
 =head1 SYNOPSIS
 
-If <$hash> contains:
+If C<$hash> contains:
 
   {
     '_'  => { admin => 'rjbs' },
