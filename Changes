@@ -1,6 +1,8 @@
 Changelog for Config-INI
 
 {{$NEXT}}
+        - fix typo in Pod
+        - slightly clean up some archaicisms in source
 
 0.028     2022-12-31 21:02:59-05:00 America/New_York
         - update author contact info
